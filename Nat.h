@@ -19,9 +19,9 @@ public:
 public:
     static uint32_t r;
 
-    explicit Nat(uint32_t n);
+    explicit Nat(int64_t n);
     Nat* add(Nat* y);
-    Nat* add(uint32_t y);
+    Nat* add(int64_t y);
     Nat* shift(uint32_t n);
     void print();
 };

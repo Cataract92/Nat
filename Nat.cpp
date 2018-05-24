@@ -10,13 +10,24 @@
 
 uint32_t Nat::r = 4096;
 
-Nat::Nat(uint32_t n) {
+Nat::Nat(int64_t n) {
+    
     int i = 0;
-    while (n >= static_cast<uint64_t >(pow(Nat::r,i)))
+    while (abs(n) >= static_cast<uint64_t >(pow(Nat::r,i)))
     {
         i++;
     }
     i--;
+
+    if ( n == -0 || n < 0)
+    {
+        n = pow(Nat::r,i+1) - abs(n);
+        vector->push_back(r-1);
+    }
+    else
+    {
+        vector->push_back(0);
+    }
 
     while (i >= 0)
     {
@@ -46,18 +57,20 @@ Nat* Nat::add(Nat* y) {
         auto v1value = 0;
         auto v2value = 0;
 
-        try{
+        if (static_cast<int32_t>(v1->size() - i) >= 0)
+        {
             v1value = (v1->at(v1->size()-i));
-        } catch (...)
-        {
+        }
+        else
             v1value = 0;
-        }
-        try{
-            v2value = (v2->at(v2->size()-i));
-        } catch (...)
+        
+        if (static_cast<int32_t>(v2->size() - i) >= 0)
         {
-            v2value = 0;
+            v2value = (v2->at(v2->size()-i));
         }
+        else
+            v2value = 0;
+
 
         if (v1value + v2value + carry >= r)
         {
@@ -69,6 +82,7 @@ Nat* Nat::add(Nat* y) {
         }
     }
 
+    std::cout << carry << " , " << v1->at(0) << " , " << v2->at(0) << " , " << maxLength << "\n";
     if (carry != 0)
         newVector->insert(newVector->begin(),carry);
 
@@ -97,8 +111,11 @@ Nat* Nat::shift(uint32_t n) {
     return tmp;
 }
 
-Nat *Nat::add(uint32_t y) {
-    return add(new Nat(y));
+Nat *Nat::add(int64_t y) {
+    auto tmp = new Nat(y);
+    auto ret = add(tmp);
+    delete(tmp);
+    return ret;
 }
 
 Nat::~Nat() {
@@ -112,10 +129,13 @@ int main(int argn, char *argv[]) {
         Nat::r = strtoul(argv[1], nullptr, 0);
     }
 
-    auto n1 = new Nat(1234567890);
-    n1 = n1->shift(100);
-    n1 = n1->add(1);
-    std::cout << "\n1234567890 * 2^(100) + 1 is:\n";
+    auto n1 = new Nat(-4);
+    //n1 = n1->shift(100);
+    n1->print(); 
+    auto n2 = new Nat(-3);
+    n2->print();
+    n1 = n1->add(n2);
+
     n1->print();
 
     return 0;
