@@ -13,6 +13,8 @@ private:
 
     explicit Nat(std::vector<uint32_t>* v);
 
+    bool isNegativ = false;
+
 public:
     virtual ~Nat();
 
@@ -22,6 +24,8 @@ public:
     explicit Nat(int64_t n);
     Nat* add(Nat* y);
     Nat* add(int64_t y);
+    Nat* sub(Nat* y);
+    Nat* sub(int64_t y);
     Nat* shift(uint32_t n);
     void print();
 };
